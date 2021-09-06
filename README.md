@@ -104,6 +104,22 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io
 ```bash
 sudo docker run hello-world
 ```
+### Create Docker group and add user
+```bash
+sudo groupadd docker
+```
+
+Add your user to the docker group.
+
+```
+sudo usermod -aG docker $USER
+```
+
+You would need to loog out and log back in so that your group membership is re-evaluated or type the following command:
+
+```
+su $USER
+```
 
 ## Install Kubernetes
 More instructions [here](https://ubuntu.com/kubernetes/install). NOTE! Don't click on the green button at the top. It's to rope you into signing up for support.
@@ -174,4 +190,51 @@ Update apt package index with the new repository and install kubectl:
 ```
 sudo apt-get update
 sudo apt-get install -y kubectl
+```
+
+# Running kubernetes service
+
+## Start the Service
+```bash
+microk8s start
+```
+Check the status
+```bash
+microk8s status --wait-ready
+```
+
+## Create the deployment
+```bash
+microk8s kubectl create -f deployment.yaml
+```
+
+check status
+```
+/Desktop/kubernetes-dotnet$ microk8s kubectl get deployment
+NAME                  READY   UP-TO-DATE   AVAILABLE   AGE
+training-deployment   0/3     3            0           22s
+```
+
+## Create the Service
+
+```
+microk8s kubectl create -f service.yaml
+```
+
+```
+microk8s kubectl get service -o wide
+NAME               TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE     SELECTOR
+kubernetes         ClusterIP      10.152.183.1     <none>        443/TCP          3d12h   <none>
+training-service   LoadBalancer   10.152.183.137   <pending>     8080:31526/TCP   61s     app=training
+```
+
+As you can see, the service will expose port 8080 and forward the request to the pods whose selector contains the label app=training.
+
+### Horizontal Scaling
+```
+microk8s kubectl scale --replicas=6 deployment/training-deployment
+```
+
+```
+microk8s kubectl get pod
 ```
