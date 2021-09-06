@@ -1,4 +1,4 @@
-A simple project to demonstrate running a .NET application on kubernetes.
+A simple project to demonstrate running a .NET application on kubernetes. If ollows most of this [tutorial](https://faun.pub/how-to-deploy-a-net-5-api-in-a-kubernetes-cluster-53212af6a0e2)
 
 # Setup
 ## Distro
